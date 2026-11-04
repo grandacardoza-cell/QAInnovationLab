@@ -24,7 +24,7 @@ public class DriverManager {
 
         if (os.contains("win")) {
             // Windows OS
-            System.setProperty("webdriver.chrome.driver", "drivers\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", "drivers157/chromedriver.exe");
         } else if (os.contains("mac")) {
             // Mac OS
             System.setProperty("webdriver.chrome.driver", "drivers/chromedriver");
@@ -46,7 +46,9 @@ public class DriverManager {
 
     @After
     public void quitDriver() {
-        driver.quit();
+
+        // driver.quit();
+      //  LO DESACTIVO PARA QUE NO SE CIERRE LA PRUEBA
     }
 
     public static void screenShot() {
