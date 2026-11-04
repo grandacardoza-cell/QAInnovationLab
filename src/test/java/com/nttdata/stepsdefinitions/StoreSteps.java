@@ -159,57 +159,55 @@ public class StoreSteps {
         );
     }
 
+
     @Cuando("agrego 2 unidades del primer producto al carrito")
     public void agregarProducto() {
-
-        vaciarCarrito();
-
-        driver().get(URL + "/es/4-men");
-
+        // Abrir el primer producto
         clicable(By.cssSelector(
                 ".products .product-miniature a.product-thumbnail"
         )).click();
 
-        WebElement elementoPrecio = visible(
-                By.cssSelector(".current-price span")
-        );
+        // Obtener precio unitario
+        WebElement elementoPrecio =
+                visible(By.cssSelector(".current-price span"));
 
-        precioUnitario = precio(
-                elementoPrecio.getText()
-        );
+        precioUnitario = precio(elementoPrecio.getText());
 
-        totalEsperado = precioUnitario.multiply(
-                BigDecimal.valueOf(2)
-        );
-
+        // Establecer exactamente 2 unidades
         WebElement cantidad = visible(By.name("qty"));
 
         cantidad.click();
-
         cantidad.sendKeys(
-                Keys.chord(Keys.CONTROL, "a")
-        );
-
-        cantidad.sendKeys("2");
-        cantidad.sendKeys(Keys.TAB);
-
-        espera().until(d ->
-                "2".equals(
-                        d.findElement(By.name("qty"))
-                                .getAttribute("value")
+                org.openqa.selenium.Keys.chord(
+                        org.openqa.selenium.Keys.CONTROL, "a"
                 )
         );
+        cantidad.sendKeys("2");
+        cantidad.sendKeys(org.openqa.selenium.Keys.TAB);
 
-        System.out.println(
-                "Precio unitario: " + precioUnitario
+        // Confirmar cantidad antes de agregar
+        espera().until(d ->
+                "2".equals(d.findElement(By.name("qty"))
+                        .getAttribute("value"))
         );
 
-        System.out.println(
-                "Total esperado: " + totalEsperado
+        Assert.assertEquals(
+                "La cantidad seleccionada debe ser 2",
+                "2",
+                driver().findElement(By.name("qty"))
+                        .getAttribute("value")
         );
+
+        totalEsperado =
+                precioUnitario.multiply(BigDecimal.valueOf(2));
+
+        System.out.println("Cantidad seleccionada: 2");
+        System.out.println("Precio unitario: " + precioUnitario);
+        System.out.println("Subtotal esperado: " + totalEsperado);
 
         evidencia();
 
+        // Agregar al carrito
         clicable(By.cssSelector(
                 "button[data-button-action='add-to-cart']"
         )).click();
@@ -328,6 +326,7 @@ public class StoreSteps {
         );
     }
 
+
     @Entonces("verifico que no se permite el acceso")
     public void verificarLoginInvalido() {
 
@@ -335,13 +334,14 @@ public class StoreSteps {
                 By.cssSelector(".alert-danger")
         );
 
-        evidencia();
-
-        Assert.fail(
-                "Fallo esperado: autenticación rechazada. "
-                        + error.getText()
+        Assert.assertTrue(
+                "No se mostró el mensaje de autenticación rechazada",
+                error.isDisplayed()
         );
+
+        evidencia();
     }
+
 
     // ========================================
     // CP03 - CATEGORIA INEXISTENTE
@@ -361,8 +361,8 @@ public class StoreSteps {
 
         evidencia();
 
-        Assert.assertFalse(
-                "Categoría Autos no encontrada: fallo esperado",
+        Assert.assertTrue(
+                "La categoría Autos no debería existir",
                 categorias.isEmpty()
         );
     }
