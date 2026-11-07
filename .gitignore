@@ -1,4 +1,16 @@
-target/
+﻿target/
 .idea/
 __MACOSX/
 *.iml
+
+# Chrome drivers
+drivers/chrome/**
+!drivers/chrome/.gitkeep
+
+# Captcha
+captcha/**
+!drivers/captcha/.gitkeep
+
+# Node
+node_modules/
+dist/
