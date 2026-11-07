@@ -54,6 +54,15 @@ public class CarritoStepsDefs {
         );
         imagen.click();
 
+        imagen.click();
+
+        System.out.println("PAQUETE ACTUAL: " + driver.getCurrentPackage());
+        System.out.println("ACTIVIDAD ACTUAL: " + driver.currentActivity());
+        System.out.println("PRODUCTO: " + producto);
+
+        System.out.println("Producto seleccionado: " + producto);
+        System.out.println("Pantalla actual: " + driver.currentActivity());
+        System.out.println("XML actual: " + driver.getPageSource());
         // Verificar que se abrió el producto correcto
         WebElement titulo = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(
@@ -105,6 +114,8 @@ public class CarritoStepsDefs {
         )).click();
     }
 
+
+
     @Then("valido que el carrito actualice correctamente")
     public void validarCarrito() {
 
@@ -112,13 +123,47 @@ public class CarritoStepsDefs {
                 By.id(PKG + "cartRL")
         )).click();
 
-        // Validación pendiente de selectores del carrito.
-        // No se declara PASSED sin comprobar producto y cantidad.
-        throw new UnsupportedOperationException(
-                "Pendiente verificar en carrito: "
-                        + productoEsperado + " x " + cantidadEsperada
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id(PKG + "productRV")
+        ));
+
+        System.out.println("===== XML DEL CARRITO =====");
+        System.out.println(driver.getPageSource());
+        System.out.println("===== FIN XML =====");
+
+        // Localizar el título del producto en el carrito
+        WebElement producto = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//*[@resource-id='" + PKG + "titleTV' " +
+                                "and @text='" + productoEsperado + "']")
+                )
+        );
+
+        // Buscar la cantidad dentro del contenedor del producto
+        WebElement cantidad = producto.findElement(
+                By.xpath("./ancestor::*[.//*[@resource-id='" +
+                        PKG + "noTV']][1]//*[@resource-id='" +
+                        PKG + "noTV']")
+        );
+
+        int cantidadObtenida =
+                Integer.parseInt(cantidad.getText().trim());
+
+        if (cantidadObtenida != cantidadEsperada) {
+            throw new AssertionError(
+                    "Cantidad incorrecta para " + productoEsperado +
+                            ". Esperada: " + cantidadEsperada +
+                            ", obtenida: " + cantidadObtenida
+            );
+        }
+
+        System.out.println(
+                "VALIDACIÓN CORRECTA: " + productoEsperado +
+                        " x " + cantidadObtenida
         );
     }
+
 
     @After("@Carrito")
     public void finalizar(Scenario scenario) {

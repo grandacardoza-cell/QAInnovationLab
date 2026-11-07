@@ -2,6 +2,7 @@
 Feature: Carrito de compras Sauce Labs
 
   @Carrito
+  @PruebaCarrito
   Scenario Outline: Agregar productos al carrito
     Given estoy en la aplicación de SauceLabs
     And valido que carguen correctamente los productos en la galería

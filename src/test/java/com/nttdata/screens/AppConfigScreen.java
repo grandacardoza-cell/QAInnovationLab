@@ -57,7 +57,7 @@ public class AppConfigScreen {
             options.setAppWaitActivity("*");
             options.setAppWaitDuration(Duration.ofSeconds(30));
             //options.setAppActivity("com.saucelabs.mydemoapp.android.view.activities.MainActivity");
-            options.setNoReset(true);
+            options.setNoReset(false);
             options.setAutoGrantPermissions(false);
             options.setCapability("appium:skipDeviceInitialization", false);
             options.setCapability("appium:skipServerInstallation", false);
